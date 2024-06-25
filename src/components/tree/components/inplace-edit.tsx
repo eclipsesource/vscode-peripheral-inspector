@@ -34,6 +34,7 @@ export type ComponentInPlaceEditProps = {
 };
 
 export const ComponentInPlaceEdit = (props: ComponentInPlaceEditProps) => {
+    // TODO: isEditMode should automatically switch to false on blur
     const [isEditMode, setEditMode] = useState(false);
 
     let view: React.JSX.Element;
@@ -60,6 +61,7 @@ export const ComponentInPlaceEdit = (props: ComponentInPlaceEditProps) => {
             }
         };
 
+        // TODO: Auto Focus doesn't work
         view = <VSCodeTextField
             id={`${props.id}-text-field`}
             initialValue={props.column.label}
@@ -68,7 +70,6 @@ export const ComponentInPlaceEdit = (props: ComponentInPlaceEditProps) => {
             onClick={event => event.stopPropagation()}
         />;
     }
-
 
     return <div
         className='inplace-edit'

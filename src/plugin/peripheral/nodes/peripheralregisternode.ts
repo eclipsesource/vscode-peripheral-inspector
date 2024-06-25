@@ -155,6 +155,7 @@ export class PeripheralRegisterNode extends ClusterOrRegisterBaseNode {
             expanded: this.expanded,
             path: this.getId().split(PERIPHERAL_ID_SEP),
             options: {
+                // TODO: Show edit command even if inline editing is possible?
                 commands: this.getCommands(),
                 contextValue: this.getContextValue(),
                 tooltip: this.generateTooltipMarkdown()?.value ?? undefined,
