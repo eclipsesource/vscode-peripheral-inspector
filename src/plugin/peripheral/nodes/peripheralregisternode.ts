@@ -167,7 +167,7 @@ export class PeripheralRegisterNode extends ClusterOrRegisterBaseNode {
                     tooltip: this.generateTooltipMarkdown()?.value ?? undefined,
                 },
                 'value': {
-                    type: 'string',
+                    type: 'text-edit',
                     label: labelValue,
                     highlight: this.hasHighlights() ?
                         [[0, labelValue.length]]
@@ -290,19 +290,21 @@ export class PeripheralRegisterNode extends ClusterOrRegisterBaseNode {
         }
     }
 
-    public async performUpdate(): Promise<boolean> {
-        const val = await vscode.window.showInputBox({ prompt: 'Enter new value: (prefix hex with 0x, binary with 0b)', value: this.getCopyValue() });
-        if (!val) {
+    public async performUpdate(value?: string): Promise<boolean> {
+        if (!value) {
+            value = await vscode.window.showInputBox({ prompt: 'Enter new value: (prefix hex with 0x, binary with 0b)', value: this.getCopyValue() });
+        }
+        if (!value) {
             return false;
         }
 
         let numval: number;
-        if (val.match(this.hexRegex)) {
-            numval = parseInt(val.substr(2), 16);
-        } else if (val.match(this.binaryRegex)) {
-            numval = parseInt(val.substr(2), 2);
-        } else if (val.match(/^[0-9]+/)) {
-            numval = parseInt(val, 10);
+        if (value.match(this.hexRegex)) {
+            numval = parseInt(value.substr(2), 16);
+        } else if (value.match(this.binaryRegex)) {
+            numval = parseInt(value.substr(2), 2);
+        } else if (value.match(/^[0-9]+/)) {
+            numval = parseInt(value, 10);
             if (numval >= this.maxValue) {
                 throw new Error(`Value entered (${numval}) is greater than the maximum value of ${this.maxValue}`);
             }

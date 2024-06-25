@@ -60,7 +60,7 @@ export abstract class PeripheralBaseNode extends BaseNode {
         return this.name ?? this.session?.id ?? 'unknown';
     }
 
-    public abstract performUpdate(): Thenable<boolean>;
+    public abstract performUpdate(value?: string): Thenable<boolean>;
     public abstract updateData(): Thenable<boolean>;
 
     public abstract getChildren(): PeripheralBaseNode[] | Promise<PeripheralBaseNode[]>;

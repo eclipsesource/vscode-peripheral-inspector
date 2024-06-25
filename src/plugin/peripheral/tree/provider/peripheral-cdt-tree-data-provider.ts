@@ -48,6 +48,17 @@ export class PeripheralCDTTreeDataProvider implements CDTTreeDataProvider<Periph
             webview.onDidToggleNode((e) => {
                 const node = this.getNodeByCDTTreeItem(e);
                 this.dataTracker.toggleNode(node);
+            }),
+            webview.onDidChangeValue(async (e) => {
+                try {
+                    const node = this.getNodeByCDTTreeItem(e.item);
+                    const result = await node.performUpdate(e.value);
+                    if (result) {
+                        this.dataTracker.updateData();
+                    }
+                } catch (error) {
+                    vscode.debug.activeDebugConsole.appendLine(`Unable to update value: ${(error as Error).message}`);
+                }
             })
         );
     }

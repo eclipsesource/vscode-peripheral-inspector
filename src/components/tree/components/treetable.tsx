@@ -17,8 +17,9 @@ import { TreeTable, TreeTableEvent } from 'primereact/treetable';
 import { classNames } from 'primereact/utils';
 import React from 'react';
 import { useCDTTreeContext } from '../tree-context';
-import { CDTTreeItem, CDTTreeTableColumnDefinition, CDTTreeTableExpanderColumn, CDTTreeTableStringColumn, CTDTreeMessengerType, CTDTreeWebviewContext } from '../types';
+import { CDTTreeItem, CDTTreeTableColumnDefinition, CDTTreeTableExpanderColumn, CDTTreeTableStringColumn, CDTTreeTableTextEditColumn, CTDTreeMessengerType, CTDTreeWebviewContext } from '../types';
 import { createActions, createHighlightedText, createIcon, createLabelWithTooltip } from './utils';
+import { ComponentInPlaceEdit } from './inplace-edit';
 
 export type ComponentTreeTableProps = {
     nodes?: CDTTreeItem[];
@@ -59,8 +60,10 @@ export const ComponentTreeTable = (props: ComponentTreeTableProps) => {
 
         if (column?.type === 'expander') {
             return expanderTemplate(node, column);
-        } else if (column?.type === 'string') {
+        } else if (column?.type === 'text') {
             return stringTemplate(node, column);
+        } else if (column?.type === 'text-edit') {
+            return textEditTemplate(node, field, column);
         }
 
         return <span>No columns provided for field {field}</span>;
@@ -94,6 +97,20 @@ export const ComponentTreeTable = (props: ComponentTreeTableProps) => {
         >
             {createLabelWithTooltip(text, column.tooltip)}
         </div>;
+    };
+
+    const textEditTemplate = (node: TreeNode, field: string, column: CDTTreeTableTextEditColumn) => {
+        CDTTreeItem.assert(node);
+
+        return <ComponentInPlaceEdit
+            id={node.key}
+            column={column}
+            onValueChanged={(_key, value) => treeContext.notify(CTDTreeMessengerType.changeValue, {
+                field,
+                item: node,
+                value
+            })}
+        />;
     };
 
     const togglerTemplate = () => {

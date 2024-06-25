@@ -97,7 +97,7 @@ export class PeripheralClusterNode extends ClusterOrRegisterBaseNode {
                     tooltip: this.description,
                 },
                 'value': {
-                    type: 'string',
+                    type: 'text',
                     label: this.getLabelValue(),
                     tooltip: this.getLabelValue()
                 }

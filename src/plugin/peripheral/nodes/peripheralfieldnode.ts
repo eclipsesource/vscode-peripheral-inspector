@@ -138,7 +138,7 @@ export class PeripheralFieldNode extends PeripheralBaseNode {
                     tooltip: this.generateTooltipMarkdown(this.isReserved())?.value ?? undefined,
                 },
                 'value': {
-                    type: 'string',
+                    type: 'text',
                     label: labelValue,
                     highlight: this.hasHighlights() ?
                         [[0, labelValue.length]]

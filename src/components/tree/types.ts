@@ -27,11 +27,17 @@ export interface CDTTreeTableExpanderColumn {
 }
 
 export interface CDTTreeTableStringColumn {
-    type: 'string';
+    type: 'text';
     label: string;
     highlight?: [number, number][];
     tooltip?: string;
 }
+
+export interface CDTTreeTableTextEditColumn extends Omit<CDTTreeTableStringColumn, 'type'> {
+    type: 'text-edit';
+}
+
+export type CDTTreeTableColumnTypes = CDTTreeTableExpanderColumn | CDTTreeTableStringColumn | CDTTreeTableTextEditColumn;
 
 export interface CDTTreeItem extends PrimeTreeNode {
     __type: 'CDTTreeItem'
@@ -40,7 +46,7 @@ export interface CDTTreeItem extends PrimeTreeNode {
     icon?: string;
     path: string[];
     options?: CDTTreeOptions;
-    columns?: Record<string, CDTTreeTableExpanderColumn | CDTTreeTableStringColumn>;
+    columns?: Record<string, CDTTreeTableColumnTypes>;
     children?: CDTTreeItem[];
 }
 
@@ -98,10 +104,17 @@ export namespace CTDTreeWebviewContext {
     }
 }
 
+export interface CDTTreeItemChangeValue {
+    item: CDTTreeItem;
+    field: string;
+    value: string;
+}
+
 export namespace CTDTreeMessengerType {
     export const updateState: NotificationType<CDTTreeState> = { method: 'updateState' };
     export const ready: NotificationType<void> = { method: 'ready' };
     export const executeCommand: NotificationType<CDTTreeExecuteCommand> = { method: 'executeCommand' };
+    export const changeValue: NotificationType<CDTTreeItemChangeValue> = { method: 'changeValue' };
     export const toggleNode: NotificationType<CDTTreeItem> = { method: 'toggleNode' };
     export const clickNode: NotificationType<CDTTreeItem> = { method: 'clickNode' };
 }

@@ -117,7 +117,7 @@ export class PeripheralNode extends PeripheralBaseNode {
                     tooltip: this.description,
                 },
                 'value': {
-                    type: 'string',
+                    type: 'text',
                     label: this.getLabelValue(),
                     tooltip: this.getLabelValue()
                 }
