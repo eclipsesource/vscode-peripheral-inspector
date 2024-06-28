@@ -12,7 +12,7 @@ import * as manifest from '../../../manifest';
 import { PeripheralInspectorAPI } from '../../../peripheral-inspector-api';
 import { SVDParser } from '../../../svd-parser';
 import { readFromUrl } from '../../../utils';
-import { BaseNode, MessageNode, PeripheralBaseNode, PeripheralNode } from '../nodes';
+import { BaseNode, MessageNode, PeripheralBaseNode, PeripheralNode, PeripheralTreeItem } from '../nodes';
 import { CDTTreeItem } from '../../../components/tree/types';
 
 const pathToUri = (path: string): vscode.Uri => {
@@ -235,8 +235,8 @@ export class PeripheralTreeForSession extends PeripheralBaseNode {
         return element ? element.getTreeItem() : this.myTreeItem;
     }
 
-    public getCDTTreeItem(): MaybePromise<CDTTreeItem> {
-        return CDTTreeItem.create({
+    public getCDTTreeItem(): MaybePromise<PeripheralTreeItem> {
+        return PeripheralTreeItem.create({
             id: this.getId(),
             key: this.getId(),
             label: this.getTitle(),

@@ -6,10 +6,9 @@
  ********************************************************************************/
 
 import * as vscode from 'vscode';
-import { PERIPHERAL_ID_SEP, PeripheralBaseNode } from './basenode';
+import { PERIPHERAL_ID_SEP, PeripheralBaseNode, PeripheralTreeItem } from './basenode';
 import { AddrRange } from '../../../addrranges';
 import { NodeSetting } from '../../../common';
-import { CDTTreeItem } from '../../../components/tree/types';
 
 export class MessageNode extends PeripheralBaseNode {
 
@@ -33,8 +32,8 @@ export class MessageNode extends PeripheralBaseNode {
         return ti;
     }
 
-    public getCDTTreeItem(): CDTTreeItem {
-        return CDTTreeItem.create({
+    public getCDTTreeItem(): PeripheralTreeItem {
+        return PeripheralTreeItem.create({
             id: this.getId(),
             key: this.getId(),
             path: this.getId().split(PERIPHERAL_ID_SEP),

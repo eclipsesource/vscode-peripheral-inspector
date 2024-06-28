@@ -31,12 +31,30 @@ export interface EditableTextData extends EditableCellData {
     type: 'text';
 }
 
+export interface EditableEnumData extends EditableCellData {
+    type: 'enum';
+    options: EditableEnumDataOption[];
+    value: string;
+}
+
+export interface EditableBooleanData extends EditableCellData {
+    type: 'boolean';
+    value: '0' | '1';
+}
+
+export type EditableData = NoEditableData | EditableTextData | EditableEnumData | EditableBooleanData;
+
+export interface EditableEnumDataOption {
+    value: string;
+    detail?: string;
+}
+
 export interface CDTTreeTableColumn {
     value: string;
     highlight?: [number, number][];
     tooltip?: string;
     icon?: string;
-    edit?: EditableTextData | NoEditableData;
+    edit?: EditableData;
 }
 
 export interface CDTTreeItem extends PrimeTreeNode {

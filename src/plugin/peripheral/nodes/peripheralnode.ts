@@ -12,7 +12,7 @@ import { CommandDefinition, NodeSetting, NumberFormat } from '../../../common';
 import { Commands } from '../../../manifest';
 import { MemUtils } from '../../../memreadutils';
 import { hexFormat } from '../../../utils';
-import { PERIPHERAL_ID_SEP, PeripheralBaseNode } from './basenode';
+import { PERIPHERAL_ID_SEP, PeripheralBaseNode, PeripheralTreeItem } from './basenode';
 import { PeripheralClusterNode, PeripheralRegisterOrClusterNode } from './peripheralclusternode';
 import { PeripheralRegisterNode } from './peripheralregisternode';
 import { CDTTreeItem } from '../../../components/tree/types';
@@ -97,8 +97,8 @@ export class PeripheralNode extends PeripheralBaseNode {
         return item;
     }
 
-    public getCDTTreeItem(): CDTTreeItem {
-        return CDTTreeItem.create({
+    public getCDTTreeItem(): PeripheralTreeItem {
+        return PeripheralTreeItem.create({
             id: this.getId(),
             key: this.getId(),
             label: this.getLabel(),

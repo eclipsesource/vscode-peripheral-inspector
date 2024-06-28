@@ -9,7 +9,23 @@ import { Command, DebugSession, TreeItem } from 'vscode';
 import { AddrRange } from '../../../addrranges';
 import { EnumerationMap } from '../../../api-types';
 import { CommandDefinition, MaybePromise, NodeSetting, NumberFormat } from '../../../common';
-import { CDTTreeItem } from '../../../components/tree/types';
+import { CDTTreeItem, CDTTreeTableColumn } from '../../../components/tree/types';
+
+export interface PeripheralTreeItem extends CDTTreeItem {
+    columns?: {
+        'title': CDTTreeTableColumn,
+        'value': CDTTreeTableColumn
+    };
+}
+
+export namespace PeripheralTreeItem {
+    export function create(options: Omit<PeripheralTreeItem, '__type'>): PeripheralTreeItem {
+        return {
+            __type: 'CDTTreeItem',
+            ...options
+        };
+    }
+}
 
 export abstract class BaseNode {
     public expanded: boolean;
@@ -24,7 +40,7 @@ export abstract class BaseNode {
 
     public abstract getChildren(): BaseNode[] | Promise<BaseNode[]>;
     public abstract getTreeItem(): TreeItem | Promise<TreeItem>;
-    public abstract getCDTTreeItem(): MaybePromise<CDTTreeItem>;
+    public abstract getCDTTreeItem(): MaybePromise<PeripheralTreeItem>;
 
 
     public getCommand(): Command | undefined {

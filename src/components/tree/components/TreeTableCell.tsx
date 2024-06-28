@@ -70,6 +70,7 @@ export const AsEditable = <P extends EditableComponentProps>(EditComponent: Comp
 
         const onStartEdit = (event: React.MouseEvent) => {
             setEditMode(true);
+            event.preventDefault();
             event.stopPropagation();
         };
 

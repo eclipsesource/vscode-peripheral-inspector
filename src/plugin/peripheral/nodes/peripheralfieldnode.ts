@@ -9,10 +9,10 @@ import * as vscode from 'vscode';
 import { AddrRange } from '../../../addrranges';
 import { AccessType, EnumerationMap, FieldOptions } from '../../../api-types';
 import { CommandDefinition, NodeSetting, NumberFormat } from '../../../common';
-import { CDTTreeItem } from '../../../components/tree/types';
+import { CDTTreeItem, EditableData, EditableEnumDataOption } from '../../../components/tree/types';
 import { Commands } from '../../../manifest';
 import { binaryFormat, hexFormat, parseInteger } from '../../../utils';
-import { PERIPHERAL_ID_SEP, PeripheralBaseNode } from './basenode';
+import { PERIPHERAL_ID_SEP, PeripheralBaseNode, PeripheralTreeItem } from './basenode';
 import { PeripheralRegisterNode } from './peripheralregisternode';
 
 export type PeripheralFieldNodeContextValue = 'field' | 'field-res' | 'fieldRO' | 'fieldWO'
@@ -86,10 +86,8 @@ export class PeripheralFieldNode extends PeripheralBaseNode {
     }
 
 
-    public hasHighlights(): boolean {
-        const displayValue = this.getLabelValue();
-
-        return displayValue !== this.prevValue;
+    public hasHighlights(value = this.getLabelValue()): boolean {
+        return value !== this.prevValue;
     }
 
     public getLabelHighlights(): [number, number][] | undefined {
@@ -116,33 +114,44 @@ export class PeripheralFieldNode extends PeripheralBaseNode {
         return item;
     }
 
-    public getCDTTreeItem(): CDTTreeItem {
+    public getCDTTreeItem(): PeripheralTreeItem {
+        const id = this.getId();
+        const key = id;
+        const path = id.split(PERIPHERAL_ID_SEP);
+        const label = this.getLabel();
         const labelValue = this.getLabelValue();
+        const contextValue = this.getContextValue();
+        const currentValue = this.getCurrentValue();
 
-        return CDTTreeItem.create({
-            id: this.getId(),
-            key: this.getId(),
-            label: this.getLabel(),
-            leaf: true,
-            path: this.getId().split(PERIPHERAL_ID_SEP),
+        const tooltip = this.generateTooltipMarkdown(this.isReserved())?.value ?? undefined;
+        const edit: EditableData =
+            contextValue === 'field' || contextValue === 'fieldWO'
+                ? this.enumeration
+                    ? { type: 'enum', options: this.enumerationValues.map<EditableEnumDataOption>(value => ({ value, detail: this.enumeration?.[this.enumerationMap[value]].description })), value: this.enumeration[currentValue].name }
+                    : this.width === 1
+                        ? { type: 'boolean', value: currentValue === 0 ? '0' : '1' }
+                        : { type: 'text' }
+                : { type: 'none' };
+
+
+        return PeripheralTreeItem.create({
+            id, key, label, leaf: true, path,
             options: {
                 commands: this.getCommands(),
-                contextValue: this.getContextValue(),
-                tooltip: this.generateTooltipMarkdown(this.isReserved())?.value ?? undefined,
+                contextValue,
+                tooltip,
                 highlights: this.getLabelHighlights()
             },
             columns: {
                 'title': {
                     value: this.getLabelTitle(),
-                    tooltip: this.generateTooltipMarkdown(this.isReserved())?.value ?? undefined,
+                    tooltip,
                 },
                 'value': {
                     value: labelValue,
-                    highlight: this.hasHighlights() ?
-                        [[0, labelValue.length]]
-                        : undefined,
+                    highlight: this.hasHighlights(labelValue) ? [[0, labelValue.length]] : undefined,
                     tooltip: labelValue,
-                    edit: { type: this.getContextValue() === 'field' || this.getContextValue() === 'fieldWO' ? 'text' : 'none' }
+                    edit
                 }
             }
         });

@@ -20,6 +20,8 @@ import { CDTTreeItem, CDTTreeTableColumnDefinition, CTDTreeMessengerType } from 
 import { LabelCell } from './LabelCell';
 import { TextFieldCell } from './TextFieldCell';
 import { createActions } from './utils';
+import { EnumCell } from './EnumCell';
+import { BooleanCell } from './BooleanCell';
 
 export type ComponentTreeTableProps = {
     nodes?: CDTTreeItem[];
@@ -62,9 +64,15 @@ export const ComponentTreeTable = (props: ComponentTreeTableProps) => {
         }
 
         if (column.edit?.type === 'text') {
-            return <TextFieldCell key={node.id} row={node} cell={column} expander={expander} field={field} />;
+            return <TextFieldCell key={node.id + '-' + field} row={node} cell={column} expander={expander} field={field} />;
         }
-        return <LabelCell key={node.id} row={node} cell={column} expander={expander} />;
+        if (column.edit?.type === 'enum') {
+            return <EnumCell key={node.id + '-' + field} row={node} cell={column} expander={expander} field={field} data={column.edit} />;
+        }
+        if (column.edit?.type === 'boolean') {
+            return <BooleanCell key={node.id + '-' + field} row={node} cell={column} expander={expander} field={field} data={column.edit} />;
+        }
+        return <LabelCell key={node.id + '-' + field} row={node} cell={column} expander={expander} />;
     };
 
     const togglerTemplate = () => {

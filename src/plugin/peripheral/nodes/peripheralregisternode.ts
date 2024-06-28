@@ -6,18 +6,17 @@
  ********************************************************************************/
 
 import * as vscode from 'vscode';
-import { PeripheralNode } from './peripheralnode';
-import { PeripheralClusterNode } from './peripheralclusternode';
-import { ClusterOrRegisterBaseNode, PERIPHERAL_ID_SEP, PeripheralBaseNode } from './basenode';
-import { PeripheralFieldNode } from './peripheralfieldnode';
 import { AddrRange } from '../../../addrranges';
-import { AccessType, PeripheralRegisterOptions, EnumerationMap } from '../../../api-types';
-import { NumberFormat, NodeSetting, CommandDefinition } from '../../../common';
-import { MemUtils } from '../../../memreadutils';
-import { extractBits, hexFormat, createMask, binaryFormat } from '../../../utils';
-import { Commands } from '../../../manifest';
+import { AccessType, EnumerationMap, PeripheralRegisterOptions } from '../../../api-types';
+import { CommandDefinition, NodeSetting, NumberFormat } from '../../../common';
 import { CDTTreeItem } from '../../../components/tree/types';
-import { resolve } from 'dns';
+import { Commands } from '../../../manifest';
+import { MemUtils } from '../../../memreadutils';
+import { binaryFormat, createMask, extractBits, hexFormat } from '../../../utils';
+import { ClusterOrRegisterBaseNode, PERIPHERAL_ID_SEP, PeripheralBaseNode, PeripheralTreeItem } from './basenode';
+import { PeripheralClusterNode } from './peripheralclusternode';
+import { PeripheralFieldNode } from './peripheralfieldnode';
+import { PeripheralNode } from './peripheralnode';
 
 export type PeripheralRegisterNodeContextValue = 'registerRW' | 'registerRO' | 'registerWO'
 
@@ -144,9 +143,9 @@ export class PeripheralRegisterNode extends ClusterOrRegisterBaseNode {
         return item;
     }
 
-    public getCDTTreeItem(): CDTTreeItem {
+    public getCDTTreeItem(): PeripheralTreeItem {
         const labelValue = this.getLabelValue();
-        return CDTTreeItem.create({
+        return PeripheralTreeItem.create({
             id: this.getId(),
             key: this.getId(),
             label: this.getLabel(),

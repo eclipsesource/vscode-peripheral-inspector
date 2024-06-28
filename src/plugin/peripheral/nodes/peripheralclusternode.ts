@@ -6,7 +6,7 @@
  ********************************************************************************/
 
 import * as vscode from 'vscode';
-import { PeripheralBaseNode, ClusterOrRegisterBaseNode, PERIPHERAL_ID_SEP } from './basenode';
+import { PeripheralBaseNode, ClusterOrRegisterBaseNode, PERIPHERAL_ID_SEP, PeripheralTreeItem } from './basenode';
 import { PeripheralRegisterNode } from './peripheralregisternode';
 import { PeripheralNode } from './peripheralnode';
 import { AddrRange } from '../../../addrranges';
@@ -76,8 +76,8 @@ export class PeripheralClusterNode extends ClusterOrRegisterBaseNode {
         return item;
     }
 
-    public getCDTTreeItem(): CDTTreeItem {
-        return CDTTreeItem.create({
+    public getCDTTreeItem(): PeripheralTreeItem {
+        return PeripheralTreeItem.create({
             id: this.getId(),
             key: this.getId(),
             expanded: this.expanded,

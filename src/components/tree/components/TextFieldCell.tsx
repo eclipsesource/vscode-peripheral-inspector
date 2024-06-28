@@ -64,7 +64,7 @@ const TextFieldComponent = React.forwardRef<EditableComponentRef, TextFielCellPr
         id={`${row.id}-text-field`}
         initialValue={cell.value}
         value={cell.value}
-        onKeyDown={event => onKeyDown(event)}
+        onKeyDown={onKeyDown}
         onClick={event => event.stopPropagation()}
         onBlur={props.onCancelEdit}
     />;
